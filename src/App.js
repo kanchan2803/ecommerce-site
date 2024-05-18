@@ -1,23 +1,41 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import ProductList from './components/ProductList';
+import Cart from './components/Cart';
 import './App.css';
 
 function App() {
+  const [cartOpen, setCartOpen] = useState(false);
+  const [cartItems, setCartItems] = useState([]);
+
+  const toggleCart = () => {
+    setCartOpen(!cartOpen);
+  };
+
+  const addToCart = (product) => {
+    setCartItems([...cartItems, product]);
+  };
+
+  const removeFromCart = (productId) => {
+    const updatedCart = cartItems.filter(item => item.id !== productId);
+    setCartItems(updatedCart);
+  };
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <h1 className="App-title">E-Commerce Site</h1>
+        <button className="cart-button" onClick={toggleCart}>
+          🛒 Cart ({cartItems.length})
+        </button>
       </header>
+      <ProductList addToCart={addToCart} />
+      {cartOpen && (
+        <Cart
+          cartItems={cartItems}
+          onClose={toggleCart}
+          removeFromCart={removeFromCart}
+        />
+      )}
     </div>
   );
 }
